@@ -81,7 +81,7 @@ export default function Home({ s3data, s3urlprefix }: any) {
         <div hidden={true} className="p-1  text-white" onClick={handleRefresh}>
           Refresh
         </div>
-        <div hidden={true} className="p-1 text-white" onClick={AutoRefresh}>
+        <div hidden={false} className="p-1 text-white" onClick={AutoRefresh}>
           Auto
         </div>
       </div>
