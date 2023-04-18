@@ -58,6 +58,10 @@ export default function Home({ s3data, s3urlprefix }: any) {
 
   return (
     <main className="bg-gray-500 min-h-screen flex flex-col justify-center">
+      {/*this is the debugger on the top*/}
+      <div className="bg-stone-700/50 sticky top-0 left-0 right-0 text-white text-[8px]">
+        debug: {imgIndex + 1}/{s3data.length} {s3data[imgIndex].key}
+      </div>
       <Image
         className="place-self-center "
         loader={({ src, width, quality }) => {
@@ -72,12 +76,8 @@ export default function Home({ s3data, s3urlprefix }: any) {
         priority={true}
         hidden={false}
       />
-      {/*this is the debugger on the top*/}
-      <div className="bg-stone-700/50 absolute top-0 left-0 right-0 text-white text-[8px]">
-        debug: {imgIndex + 1}/{s3data.length} {s3data[imgIndex].key}
-      </div>
       {/*this is tab on the bottom*/}
-      <div className="bg-stone-700/50 absolute bottom-0 left-0 right-0  flex justify-center">
+      <div className="bg-stone-700/50 sticky bottom-0 left-0 right-0  flex justify-center">
         <div hidden={true} className="p-1  text-white" onClick={handleRefresh}>
           Refresh
         </div>
@@ -87,14 +87,14 @@ export default function Home({ s3data, s3urlprefix }: any) {
       </div>
 
       {/*this is to preload all the images*/}
-      {s3data.map((img: { key: string }) => (
+      {/* {s3data.map((img: { key: string }) => (
         <link
           rel="preload"
           as="image"
           key={img.key}
           href={s3urlprefix + img.key}
         />
-      ))}
+      ))} */}
     </main>
   );
 }
