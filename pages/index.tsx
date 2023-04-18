@@ -58,8 +58,7 @@ export default function Home({ s3data, s3urlprefix }: any) {
         <br />
         if you have any questions.
         <br />
-        contact us at{" "}
-        <a href="mailto:shawhu@gmail.com  z-20">shawhu@gmail.com</a>
+        contact us at <a href="mailto:shawhu@gmail.com">shawhu@gmail.com</a>
       </div>
     </main>
   );
