@@ -2,61 +2,59 @@ import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
-import { getAllImages } from "../lib/ImagesLocal";
+import { listS3Bucket } from "../lib/S3ImagePreloader";
 import { useState, useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export async function getStaticProps() {
-  const allImageData: { id: string; fullpath: string }[] = getAllImages();
-
+export async function getServerSideProps() {
+  const s3data: { key: string; size: number }[] = await listS3Bucket();
+  const s3urlprefix: string = `https://ai-tokyo-001.s3.ap-northeast-1.amazonaws.com/`;
   return {
-    props: {
-      allImageData,
-    },
+    props: { s3data, s3urlprefix }, // will be passed to the page component as props
   };
 }
-
-export default function Home({ allImageData }: any) {
+export default function Home({ s3data, s3urlprefix }: any) {
   const [imgIndex, setimgIndex] = useState(0);
 
   useEffect(() => {
-    setimgIndex(Math.floor(Math.random() * allImageData.length));
+    setimgIndex(0);
   }, []);
 
   function handleRefresh() {
     console.log("imgIndex:" + imgIndex);
-    console.log("data len:" + allImageData.length);
-    let ii = Math.floor(Math.random() * allImageData.length);
-    console.log("setting index to :" + ii);
-    setimgIndex(ii);
+    console.log("data len:" + s3data.length);
+    if (imgIndex == s3data.length - 1) {
+      setimgIndex(0);
+    } else {
+      setimgIndex(imgIndex + 1);
+    }
+
+    console.log("setting index to :" + imgIndex);
   }
   function handleDoubleClick() {
     console.log("double clicked");
-    let ii = Math.floor(Math.random() * allImageData.length);
-    setimgIndex(ii);
-  }
-  function s3Loader(key: string) {
-    return `https://ai-tokyo-001.s3.ap-northeast-1.amazonaws.com/testimgs/${key}`;
+    handleRefresh();
   }
 
   return (
     <main className="bg-gray-500 min-h-screen flex flex-col justify-center">
       <Image
+        className="place-self-center "
         loader={({ src, width, quality }) => {
-          return s3Loader(allImageData[imgIndex].id);
+          return s3urlprefix + s3data[imgIndex].key;
         }}
-        src={allImageData[imgIndex].id}
-        alt={allImageData[imgIndex].id}
+        src={s3data[imgIndex].key}
+        alt={s3data[imgIndex].key}
         width={512}
         height={1024}
         onClick={handleRefresh}
         priority={true}
         hidden={false}
       />
-      <div className="bg-red-700/50 absolute top-0 left-0 right-0 text-white text-xs">
-        debug: {imgIndex}/{allImageData.length}{" "}
-        {s3Loader(allImageData[imgIndex].id)}
+      {/*this is the debugger on the top*/}
+      <div className="bg-red-700/50 absolute top-0 left-0 right-0 text-white text-[8px]">
+        debug: {imgIndex + 1}/{s3data.length} {s3data[imgIndex].key}
       </div>
       {/* <div className="bg-red-700/50 absolute bottom-0 left-0 right-0 flex justify-center">
         <div className="p-5 text-white" onClick={handleRefresh}>
@@ -64,9 +62,16 @@ export default function Home({ allImageData }: any) {
         </div>
         <div className="p-5 text-white">Heart</div>
       </div> */}
-      {allImageData.map((img: { id: string; fullpath: string }) => (
-        <link rel="preload" as="image" key={img.id} href={s3Loader(img.id)} />
-      ))}
+
+      {/*this is to preload all the images*/}
+      {/* {s3data.map((img: { key: string }) => (
+        <link
+          rel="preload"
+          as="image"
+          key={img.key}
+          href={s3urlprefix + img.key}
+        />
+      ))} */}
     </main>
   );
 }
