@@ -3,6 +3,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { listS3Bucket } from "../lib/S3ImagePreloader";
 import { useState, useEffect } from "react";
+import * as ga from "../lib/ga";
 
 export async function getServerSideProps() {
   const s3data: { key: string; size: number }[] = await listS3Bucket();
@@ -13,12 +14,22 @@ export async function getServerSideProps() {
 }
 export default function Home({ s3data, s3urlprefix }: any) {
   const [imgIndex, setimgIndex] = useState(0);
+  const [timerToken, settimerToken] = useState<number>();
 
   useEffect(() => {
     setimgIndex(0);
   }, []);
 
   function handleRefresh() {
+    //stop auto timer
+    window.clearInterval(timerToken);
+    setimgIndex(imgIndex - 2);
+    ga.event({
+      action: "refreshimage",
+      params: {
+        key: "asdfadsf.jpg",
+      },
+    });
     console.log("imgIndex:" + imgIndex);
     console.log("data len:" + s3data.length);
     if (imgIndex == s3data.length - 1) {
@@ -30,8 +41,18 @@ export default function Home({ s3data, s3urlprefix }: any) {
     console.log("setting index to :" + imgIndex);
   }
   function handleDoubleClick() {
-    console.log("double clicked");
-    handleRefresh();
+    AutoRefresh();
+  }
+  function AutoRefresh() {
+    console.log("double clicked start timer testing");
+    var token = window.setInterval(timerHandler, 300);
+    settimerToken(token);
+    let i = 0;
+    function timerHandler() {
+      console.log("timer trigged");
+      i++;
+      setimgIndex(imgIndex + i);
+    }
   }
 
   return (
@@ -46,29 +67,33 @@ export default function Home({ s3data, s3urlprefix }: any) {
         width={512}
         height={1024}
         onClick={handleRefresh}
+        onDoubleClick={handleDoubleClick}
         priority={true}
         hidden={false}
       />
       {/*this is the debugger on the top*/}
-      <div className="bg-red-700/50 absolute top-0 left-0 right-0 text-white text-[8px]">
+      <div className="bg-stone-700/50 absolute top-0 left-0 right-0 text-white text-[8px]">
         debug: {imgIndex + 1}/{s3data.length} {s3data[imgIndex].key}
       </div>
-      {/* <div className="bg-red-700/50 absolute bottom-0 left-0 right-0 flex justify-center">
-        <div className="p-5 text-white" onClick={handleRefresh}>
+      {/*this is tab on the bottom*/}
+      <div className="bg-stone-700/50 absolute bottom-0 left-0 right-0  flex justify-center">
+        <div hidden={true} className="p-1  text-white" onClick={handleRefresh}>
           Refresh
         </div>
-        <div className="p-5 text-white">Heart</div>
-      </div> */}
+        <div hidden={true} className="p-1 text-white" onClick={AutoRefresh}>
+          Auto
+        </div>
+      </div>
 
       {/*this is to preload all the images*/}
-      {/* {s3data.map((img: { key: string }) => (
+      {s3data.map((img: { key: string }) => (
         <link
           rel="preload"
           as="image"
           key={img.key}
           href={s3urlprefix + img.key}
         />
-      ))} */}
+      ))}
     </main>
   );
 }
