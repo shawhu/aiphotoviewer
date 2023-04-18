@@ -1,11 +1,8 @@
-import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 import { listS3Bucket } from "../lib/S3ImagePreloader";
 import { useState, useEffect } from "react";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export async function getServerSideProps() {
   const s3data: { key: string; size: number }[] = await listS3Bucket();
