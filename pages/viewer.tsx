@@ -45,7 +45,8 @@ export default function Home({ s3data, s3urlprefix }: any) {
   }
   function AutoRefresh() {
     console.log("double clicked start timer testing");
-    var token = window.setInterval(timerHandler, 300);
+    let interval = 200; //smaller means faster
+    var token = window.setInterval(timerHandler, interval);
     settimerToken(token);
     let i = 0;
     function timerHandler() {
