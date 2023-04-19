@@ -43,6 +43,9 @@ export default function Home({ s3data, s3urlprefix }: any) {
   function handleDoubleClick() {
     AutoRefresh();
   }
+  function handleBack() {
+    setimgIndex(imgIndex - 1);
+  }
   function AutoRefresh() {
     console.log("double clicked start timer testing");
     let interval = 200; //smaller means faster
@@ -78,6 +81,9 @@ export default function Home({ s3data, s3urlprefix }: any) {
       />
       {/*this is tab on the bottom*/}
       <div className="bg-stone-700/50 sticky bottom-0 left-0 right-0  flex justify-center">
+        <div hidden={false} className="p-1  text-white" onClick={handleBack}>
+          BACK
+        </div>
         <div hidden={true} className="p-1  text-white" onClick={handleRefresh}>
           Refresh
         </div>
