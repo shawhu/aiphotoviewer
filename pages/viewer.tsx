@@ -21,15 +21,14 @@ export default function Home({ s3data, s3urlprefix }: any) {
   }, []);
 
   function handleRefresh() {
-    //google analytics events
-    event("touchevents", {
-      category: "nextimage",
-      label: "labeltext",
-    });
     //stop auto timer
     window.clearInterval(timerToken);
     setimgIndex(imgIndex - 2);
-
+    //google analytics events
+    event("touchevents", {
+      category: "autorun",
+      label: "stop",
+    });
     console.log("imgIndex:" + imgIndex);
     console.log("data len:" + s3data.length);
     if (imgIndex == s3data.length - 1) {
@@ -37,7 +36,11 @@ export default function Home({ s3data, s3urlprefix }: any) {
     } else {
       setimgIndex(imgIndex + 1);
     }
-
+    //google analytics events
+    event("touchevents", {
+      category: "stepcontrol",
+      label: "next",
+    });
     console.log("setting index to :" + imgIndex);
   }
   function handleDoubleClick() {
@@ -45,12 +48,17 @@ export default function Home({ s3data, s3urlprefix }: any) {
   }
   function handleBack() {
     setimgIndex(imgIndex - 1);
+    //google analytics events
+    event("touchevents", {
+      category: "stepcontrol",
+      label: "previous",
+    });
   }
   function AutoRefresh() {
     //google analytics events
     event("touchevents", {
       category: "autorun",
-      label: "labeltext",
+      label: "start",
     });
     console.log("double clicked start timer testing");
     let interval = 200; //smaller means faster
@@ -58,9 +66,13 @@ export default function Home({ s3data, s3urlprefix }: any) {
     settimerToken(token);
     let i = 0;
     function timerHandler() {
-      console.log("timer trigged");
       i++;
       setimgIndex(imgIndex + i);
+      //google analytics events
+      event("touchevents", {
+        category: "autorun",
+        label: "next",
+      });
     }
   }
 
