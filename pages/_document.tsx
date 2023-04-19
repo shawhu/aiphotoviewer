@@ -20,7 +20,7 @@ export default function Document() {
           content="https://aidolls.org/preview.jpg"
         />
       </Head>
-      <body>
+      <body className="bg-stone-800">
         <Main />
         <NextScript />
       </body>
