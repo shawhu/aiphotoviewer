@@ -3,6 +3,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { listS3Bucket } from "../lib/S3ImagePreloader";
 import { useState, useEffect } from "react";
+import { event } from "nextjs-google-analytics";
 
 export async function getServerSideProps() {
   const s3data: { key: string; size: number }[] = await listS3Bucket();
@@ -20,6 +21,11 @@ export default function Home({ s3data, s3urlprefix }: any) {
   }, []);
 
   function handleRefresh() {
+    //google analytics events
+    event("touchevents", {
+      category: "nextimage",
+      label: "labeltext",
+    });
     //stop auto timer
     window.clearInterval(timerToken);
     setimgIndex(imgIndex - 2);
@@ -41,6 +47,11 @@ export default function Home({ s3data, s3urlprefix }: any) {
     setimgIndex(imgIndex - 1);
   }
   function AutoRefresh() {
+    //google analytics events
+    event("touchevents", {
+      category: "autorun",
+      label: "labeltext",
+    });
     console.log("double clicked start timer testing");
     let interval = 200; //smaller means faster
     var token = window.setInterval(timerHandler, interval);
