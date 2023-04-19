@@ -3,7 +3,6 @@ import Link from "next/link";
 import Head from "next/head";
 import { listS3Bucket } from "../lib/S3ImagePreloader";
 import { useState, useEffect } from "react";
-import * as ga from "../lib/ga";
 
 export async function getServerSideProps() {
   const s3data: { key: string; size: number }[] = await listS3Bucket();
@@ -24,12 +23,7 @@ export default function Home({ s3data, s3urlprefix }: any) {
     //stop auto timer
     window.clearInterval(timerToken);
     setimgIndex(imgIndex - 2);
-    ga.event({
-      action: "refreshimage",
-      params: {
-        key: "asdfadsf.jpg",
-      },
-    });
+
     console.log("imgIndex:" + imgIndex);
     console.log("data len:" + s3data.length);
     if (imgIndex == s3data.length - 1) {

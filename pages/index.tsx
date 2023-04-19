@@ -19,22 +19,22 @@ export default function Home({ s3data, s3urlprefix }: any) {
       <Head>
         <title>AiPhoto</title>
       </Head>
-      <div className="bg-stone-400 absolute top-0 left-0 w-full h-full -z-50 grid gap-0 grid-rows-10 grid-cols-12">
+      <div className="bg-stone-900 absolute top-0 left-0 w-full h-full -z-50 grid gap-0 grid-rows-10 grid-cols-8">
         {s3data.map((img: { key: string; size: number }) => (
           <Image
-            className="blur-[2px]"
+            className="blur-[0px]"
             loader={({ src, width, quality }) => {
               return s3urlprefix + img.key;
             }}
             alt={img.key}
             key={img.key}
             src={img.key}
-            width={20}
-            height={40}
+            width={50}
+            height={100}
           />
         ))}
       </div>
-      <div className="bg-stone-900/50 absolute top-0 left-0 w-full h-full -z-49"></div>
+      <div className="bg-[#000000]/50 absolute top-0 left-0 w-full h-full -z-49"></div>
       <div className="w-80 text-center z-20">
         <br />
         <br />

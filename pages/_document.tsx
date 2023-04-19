@@ -19,21 +19,6 @@ export default function Document() {
           property="og:image:secure_url"
           content="https://aidolls.org/preview.jpg"
         />
-        <div className="container">
-          <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-VWC01FW6XV"
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-VWC01FW6XV');
-        `}
-          </Script>
-        </div>
       </Head>
       <body>
         <Main />

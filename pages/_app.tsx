@@ -1,6 +1,8 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { GoogleAnalytics } from "nextjs-google-analytics";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  <GoogleAnalytics />;
+  return <Component {...pageProps} />;
 }
