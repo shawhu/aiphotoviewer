@@ -79,9 +79,15 @@ export default function Home({ s3data, s3urlprefix }: any) {
   return (
     <main className="bg-gray-500 min-h-screen flex flex-col justify-center">
       {/*this is the debugger on the top*/}
-      <div className="bg-stone-700/50 sticky top-0 left-0 right-0 text-white text-[8px]">
+      <div className="bg-stone-700/50 sticky top-0 left-0 right-0 text-white text-[8px] z-20">
         debug: {imgIndex + 1}/{s3data.length} {s3data[imgIndex].key}
       </div>
+      {/*this is the layer ontop of image, user can't save image*/}
+      <div
+        className="absolute top-0 left-0 bg-[#000]/0 w-full h-full z-10"
+        onClick={handleRefresh}
+        onDoubleClick={handleDoubleClick}
+      ></div>
       <Image
         className="place-self-center "
         loader={({ src, width, quality }) => {
@@ -91,13 +97,11 @@ export default function Home({ s3data, s3urlprefix }: any) {
         alt={s3data[imgIndex].key}
         width={512}
         height={1024}
-        onClick={handleRefresh}
-        onDoubleClick={handleDoubleClick}
         priority={true}
         hidden={false}
       />
       {/*this is tab on the bottom*/}
-      <div className="bg-stone-700/50 sticky bottom-0 left-0 right-0  flex justify-center">
+      <div className="bg-stone-700/50 sticky bottom-0 left-0 right-0  flex justify-center z-20">
         <div hidden={false} className="p-1  text-white" onClick={handleBack}>
           BACK
         </div>
